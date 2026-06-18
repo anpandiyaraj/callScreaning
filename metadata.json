@@ -1,0 +1,6 @@
+{
+  "name": "Intelligent Call Blocker",
+  "description": "An intelligent, local call blocker and default Call Screening Service featuring a local voice assistant and scheduled block management.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

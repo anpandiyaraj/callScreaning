@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+  SPDX-License-Identifier: Apache-2.0
+  Copyright 2026 Google LLC
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.callblocker">
+
+    <!-- Core Permissions required for call screening and blocking -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ANSWER_PHONE_CALLS" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    
+    <!-- Required to record user voice for the local Voice Assistant -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    
+    <!-- Required if we access local system contacts to verify family/friends -->
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    
+    <!-- Required to schedule background tasks for blocking schedule windows -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.IntelligentCallBlocker">
+
+        <!-- Main Dashboard Activity -->
+        <activity
+            android:name=".ui.MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.IntelligentCallBlocker">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- 
+          The Custom Call Screening Service.
+          Must demand the BIND_SCREENING_SERVICE permission so only the Android system OS 
+          can bind to it to screeen incoming numbers.
+        -->
+        <service
+            android:name=".service.CustomCallScreeningService"
+            android:permission="android.permission.BIND_SCREENING_SERVICE"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.telecom.CallScreeningService" />
+            </intent-filter>
+        </service>
+
+        <!-- Dynamic receiver to reinitialize WorkManager on boot for calendar blocks -->
+        <receiver
+            android:name=".service.BootReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+    </application>
+</manifest>
